@@ -1,0 +1,19 @@
+/* Default Ionic - minimal layout */
+
+.login-container {
+  padding: 2rem;
+}
+
+.header-section {
+  text-align: center;
+  margin-bottom: 2rem;
+
+  h1 {
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    color: var(--ion-color-medium);
+    font-size: 0.9rem;
+  }
+}

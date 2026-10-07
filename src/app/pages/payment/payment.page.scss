@@ -1,0 +1,333 @@
+/* Payment page - clean layout */
+
+.payment-content {
+  --background: var(--ion-background-color);
+}
+
+.payment-view {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.payment-header {
+  ion-toolbar {
+    --background: var(--ion-background-color);
+  }
+}
+
+.payment-body {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.amount-section {
+  text-align: center;
+  padding: 2rem 1rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, var(--ion-color-primary-tint) 0%, var(--ion-background-color) 100%);
+  border-radius: 12px;
+
+  .amount-label {
+    display: block;
+    font-size: 14px;
+    color: var(--ion-color-medium);
+    margin-bottom: 0.5rem;
+  }
+
+  .amount-value {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.25rem;
+
+    .amount {
+      font-size: 2.25rem;
+      font-weight: 700;
+      color: var(--ion-text-color);
+    }
+
+    .currency {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--ion-color-medium);
+    }
+  }
+}
+
+.summary-card {
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  background: var(--ion-item-background);
+  border: 1px solid var(--ion-color-light-shade);
+
+  .summary-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+
+    ion-icon {
+      font-size: 20px;
+      color: var(--ion-color-primary);
+    }
+
+    h3 {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+  }
+
+  .summary-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--ion-color-light);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    ion-icon {
+      font-size: 20px;
+      color: var(--ion-color-primary);
+      flex-shrink: 0;
+    }
+
+    .summary-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+
+      .label {
+        font-size: 12px;
+        color: var(--ion-color-medium);
+      }
+
+      .value {
+        font-size: 14px;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+.payment-methods {
+  margin-bottom: 1.5rem;
+
+  h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 0.75rem 0;
+  }
+}
+
+.method-option {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  margin-bottom: 0.5rem;
+  border: 2px solid var(--ion-color-light-shade);
+  background: var(--ion-item-background);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+
+  &.selected {
+    border-color: var(--ion-color-primary);
+    background: var(--ion-color-primary-tint);
+  }
+
+  .method-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--ion-color-light);
+
+    ion-icon {
+      font-size: 24px;
+      color: var(--ion-color-primary);
+    }
+
+    &.wallet ion-icon {
+      color: var(--ion-text-color);
+    }
+  }
+
+  .method-name {
+    flex: 1;
+    font-weight: 500;
+  }
+
+  .check {
+    color: var(--ion-color-success);
+    font-size: 24px;
+  }
+}
+
+.pay-action {
+  margin-top: auto;
+  padding-top: 0.5rem;
+
+  ion-button {
+    --border-radius: 12px;
+  }
+
+  .pay-btn-text {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .secure-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin: 1rem 0 0;
+    font-size: 12px;
+    color: var(--ion-color-medium);
+
+    ion-icon {
+      font-size: 16px;
+    }
+  }
+}
+
+/* Success view */
+.success-view {
+  padding: 2rem;
+  text-align: center;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.success-content {
+  max-width: 360px;
+  width: 100%;
+}
+
+.success-animation {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.success-circle {
+  width: 96px;
+  height: 96px;
+  margin: 0 auto;
+  background: var(--ion-color-success);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+
+  ion-icon {
+    font-size: 48px;
+    color: white;
+  }
+}
+
+.success-rings .ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 2px solid var(--ion-color-success);
+  opacity: 0.3;
+  animation: ring-pulse 1.5s ease-out infinite;
+}
+
+.success-rings .ring-1 { width: 96px; height: 96px; animation-delay: 0s; }
+.success-rings .ring-2 { width: 120px; height: 120px; animation-delay: 0.5s; }
+.success-rings .ring-3 { width: 144px; height: 144px; animation-delay: 1s; }
+
+@keyframes ring-pulse {
+  from {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0.5;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 0;
+  }
+}
+
+.success-view h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.5rem;
+}
+
+.success-amount {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--ion-color-primary);
+  margin: 0 0 1.5rem;
+}
+
+.receipt-card {
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 1.5rem 0;
+  background: var(--ion-item-background);
+  border: 1px solid var(--ion-color-light-shade);
+
+  .receipt-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 1.25rem;
+    background: var(--ion-color-light);
+    font-weight: 600;
+
+    ion-icon {
+      font-size: 20px;
+    }
+  }
+
+  .receipt-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 1.25rem;
+    border-bottom: 1px solid var(--ion-color-light);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    span:first-child {
+      color: var(--ion-color-medium);
+      font-size: 14px;
+    }
+
+    span:last-child {
+      font-weight: 500;
+    }
+  }
+}
+
+.success-actions {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  ion-button {
+    --border-radius: 12px;
+  }
+}

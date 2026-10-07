@@ -1,0 +1,106 @@
+<ion-content class="setup-content">
+  <div class="setup-container">
+    <!-- Progress Indicator -->
+    <div class="progress-bar">
+      <div class="progress-step" [class.active]="currentStep >= 1" [class.completed]="currentStep > 1">
+        <div class="step-circle">
+          <ion-icon *ngIf="currentStep > 1" name="checkmark"></ion-icon>
+          <span *ngIf="currentStep <= 1">1</span>
+        </div>
+        <span class="step-label">Profile</span>
+      </div>
+      <div class="progress-line" [class.active]="currentStep > 1"></div>
+      <div class="progress-step" [class.active]="currentStep >= 2">
+        <div class="step-circle">
+          <span>2</span>
+        </div>
+        <span class="step-label">Vehicle</span>
+      </div>
+    </div>
+
+    <!-- Step 1: Profile Info -->
+    <div class="step-content" *ngIf="currentStep === 1">
+      <div class="step-header">
+        <h1>Let's set up your profile</h1>
+        <p>Tell us a bit about yourself</p>
+      </div>
+
+      <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+        <div class="form-group">
+          <label for="setup-name">Name</label>
+          <ion-item lines="none" class="input-item">
+            <ion-icon name="person-outline" slot="start"></ion-icon>
+            <ion-input id="setup-name" name="name" formControlName="name" autocomplete="name" placeholder="Enter your name"></ion-input>
+          </ion-item>
+        </div>
+
+        <div class="form-group">
+          <label>Phone Number</label>
+          <ion-item lines="none" class="input-item">
+            <ion-icon name="call-outline" slot="start"></ion-icon>
+            <ion-input formControlName="phone" type="tel" placeholder="+389 XX XXX XXX"></ion-input>
+          </ion-item>
+        </div>
+
+        <ion-button expand="block" type="submit" [disabled]="profileForm.invalid" class="continue-btn">
+          Continue
+          <ion-icon name="arrow-forward" slot="end"></ion-icon>
+        </ion-button>
+      </form>
+    </div>
+
+    <!-- Step 2: Vehicle Info -->
+    <div class="step-content" *ngIf="currentStep === 2">
+      <div class="step-header">
+        <h1>Add your vehicle</h1>
+        <p>Add your car to start parking</p>
+      </div>
+
+      <form [formGroup]="vehicleForm" (ngSubmit)="addVehicle()">
+        <div class="form-group">
+          <label>License Plate</label>
+          <ion-item lines="none" class="input-item license-plate-input">
+            <ion-icon name="car-outline" slot="start"></ion-icon>
+            <ion-input 
+              formControlName="licensePlate" 
+              placeholder="OH 1234 AB"
+              [style.text-transform]="'uppercase'"
+            ></ion-input>
+          </ion-item>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Brand</label>
+            <ion-item lines="none" class="input-item">
+              <ion-input formControlName="brand" placeholder="e.g. Toyota"></ion-input>
+            </ion-item>
+          </div>
+          <div class="form-group">
+            <label>Model</label>
+            <ion-item lines="none" class="input-item">
+              <ion-input formControlName="model" placeholder="e.g. Corolla"></ion-input>
+            </ion-item>
+          </div>
+        </div>
+
+        <ion-button expand="block" type="submit" [disabled]="vehicleForm.invalid" class="continue-btn">
+          <ion-icon name="checkmark-circle" slot="start"></ion-icon>
+          Complete Setup
+        </ion-button>
+
+        <div class="skip-section">
+          <ion-button fill="clear" (click)="skipVehicle()">
+            Skip for now
+          </ion-button>
+        </div>
+      </form>
+
+      <ion-button fill="clear" class="back-btn" (click)="goBack()">
+        <ion-icon name="arrow-back" slot="start"></ion-icon>
+        Back
+      </ion-button>
+    </div>
+  </div>
+</ion-content>
+

@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Verify Code</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="verify-container">
+    <p class="ion-margin-bottom">Enter the 6-digit code sent to {{ email }}</p>
+    
+    <form [formGroup]="codeForm" (ngSubmit)="verifyCode()">
+      <ion-item lines="full">
+        <ion-label position="stacked">Verification Code</ion-label>
+        <ion-input
+          type="text"
+          formControlName="code"
+          placeholder="000000"
+          inputmode="numeric"
+          maxlength="6"
+        ></ion-input>
+      </ion-item>
+      
+      <ion-button
+        expand="block"
+        type="submit"
+        [disabled]="codeForm.invalid || isLoading"
+        class="ion-margin-top"
+      >
+        Verify & Continue
+      </ion-button>
+
+      <p class="resend-text ion-margin-top">
+        Didn't receive the code?
+        <ion-button fill="clear" size="small" [disabled]="isResending" (click)="resendCode()">
+          {{ isResending ? 'Sending...' : 'Resend code' }}
+        </ion-button>
+      </p>
+    </form>
+  </div>
+</ion-content>

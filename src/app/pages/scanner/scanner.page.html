@@ -1,0 +1,102 @@
+<ion-content class="scanner-content">
+  <!-- Scanner View -->
+  <div class="scanner-view" *ngIf="viewState === 'scanner'">
+    <div class="scanner-header">
+      <ion-button fill="clear" (click)="goToMap()">
+        <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      </ion-button>
+      <h1 class="header-title">Scan QR Code</h1>
+      <div class="header-spacer"></div>
+    </div>
+
+    <div class="scanner-container">
+      <div class="video-wrapper">
+        <video #videoElement playsinline></video>
+        <div class="scan-overlay">
+          <div class="scan-frame">
+            <div class="corner top-left"></div>
+            <div class="corner top-right"></div>
+            <div class="corner bottom-left"></div>
+            <div class="corner bottom-right"></div>
+            <div class="scan-line"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scanner-instructions" *ngIf="!isScanning">
+        <ion-icon name="qr-code"></ion-icon>
+        <p>Tap to start scanning</p>
+        <ion-button (click)="startScanning()">
+          <ion-icon name="camera" slot="start"></ion-icon>
+          Start Camera
+        </ion-button>
+      </div>
+
+      <p class="scan-hint" *ngIf="isScanning">
+        Point your camera at the parking spot QR code
+      </p>
+    </div>
+  </div>
+
+  <!-- Active Session View -->
+  <div class="session-view" *ngIf="viewState === 'active-session' && activeSession">
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-button fill="clear" (click)="goToMap()">
+            <ion-icon name="arrow-back"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end" class="header-spacer-btn">
+          <ion-button fill="clear" disabled>
+            <ion-icon name="arrow-back"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+        <ion-title class="header-title-center">Parking</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <div class="session-content">
+      <div class="timer">{{ elapsedTime }}</div>
+      <p class="timer-label">Duration</p>
+
+      <div class="info-block">
+        <span>{{ activeSession.spot.zoneName }} · {{ activeSession.spot.spotNumber }}</span>
+        <span>{{ activeSession.vehicle.licensePlate }}</span>
+        <span class="amount">{{ activeSession.currentAmount }} MKD</span>
+      </div>
+
+      <ion-button expand="block" color="danger" (click)="scanToStop()" class="stop-btn">
+        <ion-icon name="qr-code" slot="start"></ion-icon>
+        Scan to Stop
+      </ion-button>
+    </div>
+  </div>
+
+  <!-- Session Ended View -->
+  <div class="ended-view" *ngIf="viewState === 'session-ended' && activeSession">
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-button fill="clear" (click)="goToMap()">
+            <ion-icon name="arrow-back"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end" class="header-spacer-btn">
+          <ion-button fill="clear" disabled>
+            <ion-icon name="arrow-back"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+        <ion-title class="header-title-center">Parking Ended</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <div class="ended-content">
+      <p class="total">{{ paymentAmount || activeSession.totalAmount }} MKD</p>
+      <p class="meta">{{ activeSession.spot.zoneName }} · {{ activeSession.formattedDuration }}</p>
+      <ion-button expand="block" (click)="goToPayment()">
+        <ion-icon name="card" slot="start"></ion-icon>
+        Pay Now
+      </ion-button>
+      <ion-button expand="block" fill="clear" (click)="goToMap()">Pay Later</ion-button>
+    </div>
+  </div>
+</ion-content>

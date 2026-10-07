@@ -1,0 +1,156 @@
+<ion-content class="payment-content">
+  <!-- Payment Form View -->
+  <div class="payment-view" *ngIf="!paymentComplete">
+    <ion-header class="payment-header">
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-button fill="clear" (click)="goBack()">
+            <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+        <ion-title>Payment</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <div class="payment-body" *ngIf="session">
+      <!-- Amount Section -->
+      <div class="amount-section">
+        <span class="amount-label">Total Amount</span>
+        <div class="amount-value">
+          <span class="amount">{{ amount || session.totalAmount || session.currentAmount }}</span>
+          <span class="currency">MKD</span>
+        </div>
+      </div>
+
+      <!-- Session Summary -->
+      <div class="summary-card">
+        <div class="summary-header">
+          <ion-icon name="receipt-outline"></ion-icon>
+          <h3>Parking Summary</h3>
+        </div>
+        <div class="summary-item">
+          <ion-icon name="location-outline"></ion-icon>
+          <div class="summary-text">
+            <span class="label">Location</span>
+            <span class="value">{{ session.spot.zoneName }} - {{ session.spot.spotNumber }}</span>
+          </div>
+        </div>
+        <div class="summary-item">
+          <ion-icon name="car-sport-outline"></ion-icon>
+          <div class="summary-text">
+            <span class="label">Vehicle</span>
+            <span class="value">{{ session.vehicle.licensePlate }}</span>
+          </div>
+        </div>
+        <div class="summary-item">
+          <ion-icon name="time-outline"></ion-icon>
+          <div class="summary-text">
+            <span class="label">Duration</span>
+            <span class="value">{{ session.formattedDuration || formatDuration(session.durationMinutes || 0) }}</span>
+          </div>
+        </div>
+        <div class="summary-item">
+          <ion-icon name="calendar-outline"></ion-icon>
+          <div class="summary-text">
+            <span class="label">Date</span>
+            <span class="value">{{ session.startedAt | date:'MMM d, y' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payment Methods -->
+      <div class="payment-methods">
+        <h3>Payment Method</h3>
+        <div class="methods-list">
+          <div 
+            class="method-option"
+            *ngFor="let method of paymentMethods"
+            [class.selected]="selectedPaymentMethod === method.id"
+            (click)="selectPaymentMethod(method.id)"
+          >
+            <div class="method-icon" [ngClass]="method.type">
+              <ion-icon [name]="method.icon"></ion-icon>
+            </div>
+            <span class="method-name">{{ method.name }}</span>
+            <ion-icon name="checkmark-circle" class="check" *ngIf="selectedPaymentMethod === method.id"></ion-icon>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pay Button -->
+      <div class="pay-action">
+        <ion-button 
+          expand="block" 
+          size="large"
+          [disabled]="!selectedPaymentMethod || isProcessing"
+          (click)="processPayment()"
+        >
+          <ion-spinner *ngIf="isProcessing" name="crescent"></ion-spinner>
+          <span *ngIf="!isProcessing" class="pay-btn-text">
+            <ion-icon name="lock-closed" slot="start"></ion-icon>
+            Pay {{ amount || session.totalAmount || session.currentAmount }} MKD
+          </span>
+        </ion-button>
+        <p class="secure-note">
+          <ion-icon name="shield-checkmark-outline"></ion-icon>
+          Secure payment
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success View -->
+  <div class="success-view" *ngIf="paymentComplete">
+    <div class="success-content">
+      <div class="success-animation">
+        <div class="success-circle">
+          <ion-icon name="checkmark"></ion-icon>
+        </div>
+        <div class="success-rings">
+          <div class="ring ring-1"></div>
+          <div class="ring ring-2"></div>
+          <div class="ring ring-3"></div>
+        </div>
+      </div>
+
+      <h2>Payment Successful!</h2>
+      <p class="success-amount">{{ amount || session?.totalAmount || session?.currentAmount }} MKD</p>
+      
+      <div class="receipt-card">
+        <div class="receipt-header">
+          <ion-icon name="receipt"></ion-icon>
+          <span>Receipt</span>
+        </div>
+        <div class="receipt-details">
+          <div class="receipt-row">
+            <span>Transaction ID</span>
+            <span>{{ transactionId }}</span>
+          </div>
+          <div class="receipt-row">
+            <span>Location</span>
+            <span>{{ session?.spot?.zoneName }} - {{ session?.spot?.spotNumber }}</span>
+          </div>
+          <div class="receipt-row">
+            <span>Duration</span>
+            <span>{{ session?.formattedDuration || formatDuration(session?.durationMinutes || 0) }}</span>
+          </div>
+          <div class="receipt-row">
+            <span>Date</span>
+            <span>{{ session?.startedAt | date:'MMM d, y HH:mm' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="success-actions">
+        <ion-button expand="block" (click)="goToMap()">
+          <ion-icon name="map" slot="start"></ion-icon>
+          Back to Map
+        </ion-button>
+        <ion-button expand="block" fill="outline" (click)="goToHistory()">
+          <ion-icon name="list" slot="start"></ion-icon>
+          View History
+        </ion-button>
+      </div>
+    </div>
+  </div>
+</ion-content>

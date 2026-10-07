@@ -1,0 +1,17 @@
+/* Default Ionic - minimal layout */
+
+.verify-container {
+  padding: 2rem;
+}
+
+.resend-text {
+  text-align: center;
+  font-size: 14px;
+  color: var(--ion-color-medium);
+
+  ion-button {
+    --padding-start: 4px;
+    --padding-end: 4px;
+    margin-left: 0;
+  }
+}

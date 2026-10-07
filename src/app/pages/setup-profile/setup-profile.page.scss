@@ -1,0 +1,73 @@
+/* Default Ionic - minimal layout */
+
+.setup-container {
+  padding: 1rem;
+}
+
+.progress-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.progress-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+
+  .step-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--ion-color-light);
+    border: 2px solid var(--ion-color-medium);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &.active .step-circle {
+    background: var(--ion-color-primary);
+    border-color: var(--ion-color-primary);
+    color: var(--ion-color-primary-contrast);
+  }
+
+  &.completed .step-circle {
+    background: var(--ion-color-success);
+    border-color: var(--ion-color-success);
+    color: white;
+  }
+}
+
+.progress-line {
+  width: 40px;
+  height: 2px;
+  background: var(--ion-color-light);
+  margin: 0 8px;
+  margin-bottom: 1.5rem;
+}
+
+.step-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+
+  h1 {
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    color: var(--ion-color-medium);
+  }
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}

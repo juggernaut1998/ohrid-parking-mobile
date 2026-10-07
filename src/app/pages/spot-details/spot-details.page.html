@@ -1,0 +1,119 @@
+<ion-header>
+  <ion-toolbar color="light">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/map"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Parking Spot</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="spot-details-content">
+  <div class="spot-details" *ngIf="spot && !isLoading">
+    <!-- Spot header -->
+    <div class="spot-header" [style.--zone-color]="spot.zone.color">
+      <div class="spot-badge">{{ spot.zone.name }}</div>
+      <h1>Spot {{ spot.spotNumber }}</h1>
+      <div class="status-pill" [class.available]="spot.status === 'free'" [class.unavailable]="spot.status !== 'free'">
+        <ion-icon [name]="spot.status === 'free' ? 'checkmark-circle' : 'close-circle'"></ion-icon>
+        {{ getSpotStatus(spot) }}
+      </div>
+    </div>
+
+    <!-- Spot info card -->
+    <div class="info-card">
+      <div class="info-row">
+        <ion-icon name="location-outline"></ion-icon>
+        <span>{{ spot.address || (spot.zone.name + ' - ' + spot.spotNumber) }}</span>
+      </div>
+      <div class="info-row price-row">
+        <ion-icon name="pricetag-outline"></ion-icon>
+        <span class="price">{{ spot.zone.pricePerHour }} <small>MKD/hr</small></span>
+      </div>
+    </div>
+
+    <!-- Vehicle selection - only when spot is available AND we came from scan -->
+    <div class="vehicle-section" *ngIf="isSpotAvailable(spot) && fromScan">
+      <h3>Select Vehicle</h3>
+      <ion-list lines="none" class="vehicle-list">
+        <ion-item 
+          button 
+          *ngFor="let vehicle of vehicles"
+          [class.vehicle-selected]="selectedVehicleId === vehicle.id"
+          (click)="selectedVehicleId = vehicle.id"
+        >
+          <ion-icon name="car-sport" slot="start"></ion-icon>
+          <ion-label>
+            <h2>{{ vehicle.licensePlate }}</h2>
+            <p>{{ vehicle.brand }} {{ vehicle.model }}</p>
+          </ion-label>
+          <ion-icon 
+            *ngIf="selectedVehicleId === vehicle.id" 
+            name="checkmark-circle" 
+            slot="end" 
+            color="primary"
+          ></ion-icon>
+        </ion-item>
+      </ion-list>
+
+      <ion-button 
+        *ngIf="vehicles.length === 0" 
+        fill="outline" 
+        size="small" 
+        (click)="goToProfile()"
+      >
+        <ion-icon name="add" slot="start"></ion-icon>
+        Add Vehicle
+      </ion-button>
+    </div>
+
+    <!-- Active session button - when user has active parking -->
+    <div class="action-section" *ngIf="activeSession">
+      <ion-button expand="block" (click)="goToActiveSession()">
+        <ion-icon name="time" slot="start"></ion-icon>
+        Parking Active — View Session
+      </ion-button>
+    </div>
+
+    <!-- Scan to Park - when spot available, no active session -->
+    <div class="action-section" *ngIf="isSpotAvailable(spot) && !activeSession && !fromScan">
+      <ion-button expand="block" (click)="goToScanToPark()">
+        <ion-icon name="qr-code" slot="start"></ion-icon>
+        Scan to Park
+      </ion-button>
+    </div>
+
+    <!-- Confirm & Start - when came from scan, spot available -->
+    <div class="action-section" *ngIf="isSpotAvailable(spot) && !activeSession && fromScan">
+      <ion-button 
+        expand="block" 
+        [disabled]="!selectedVehicleId || isStarting"
+        (click)="startParking()"
+      >
+        <ion-icon name="checkmark-circle" slot="start"></ion-icon>
+        Confirm & Start Parking
+      </ion-button>
+    </div>
+
+    <!-- Not available message - when spot is reserved, occupied, or disabled -->
+    <div class="unavailable-message" *ngIf="!isSpotAvailable(spot)">
+      <ion-icon name="close-circle-outline"></ion-icon>
+      <p>You cannot park here</p>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div class="loading-state" *ngIf="isLoading">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Loading spot details...</p>
+  </div>
+
+  <!-- Error -->
+  <div class="error-state" *ngIf="loadError && !isLoading">
+    <ion-icon name="alert-circle-outline"></ion-icon>
+    <p>{{ loadError }}</p>
+    <ion-button fill="outline" (click)="goBack()">
+      <ion-icon name="arrow-back" slot="start"></ion-icon>
+      Go Back
+    </ion-button>
+  </div>
+</ion-content>

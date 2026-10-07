@@ -1,0 +1,262 @@
+<ion-content class="profile-content">
+  <ion-refresher slot="fixed" (ionRefresh)="refreshHistory($event)" *ngIf="activeTab === 'history'">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  <!-- Header -->
+  <div class="profile-header">
+    <div class="user-avatar">
+      <ion-icon name="person"></ion-icon>
+    </div>
+    <h1 *ngIf="user">{{ user.name || 'User' }}</h1>
+    <p *ngIf="user">{{ user.email }}</p>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs-container">
+    <div class="tab-buttons">
+      <button 
+        [class.active]="activeTab === 'profile'"
+        (click)="setActiveTab('profile')"
+      >
+        <ion-icon name="person-outline"></ion-icon>
+        Profile
+      </button>
+      <button 
+        [class.active]="activeTab === 'vehicles'"
+        (click)="setActiveTab('vehicles')"
+      >
+        <ion-icon name="car-outline"></ion-icon>
+        Vehicles
+      </button>
+      <button 
+        [class.active]="activeTab === 'history'"
+        (click)="setActiveTab('history')"
+      >
+        <ion-icon name="time-outline"></ion-icon>
+        History
+      </button>
+    </div>
+  </div>
+
+  <!-- Profile Tab -->
+  <div class="tab-content" *ngIf="activeTab === 'profile'">
+    <div class="section-card">
+      <div class="section-header">
+        <h3>Personal Information</h3>
+        <ion-button fill="clear" size="small" (click)="isEditingProfile ? cancelEditProfile() : startEditProfile()">
+          {{ isEditingProfile ? 'Cancel' : 'Edit' }}
+        </ion-button>
+      </div>
+
+      <form [formGroup]="profileForm">
+        <div class="form-group">
+          <label for="profile-name">Name</label>
+          <ion-item lines="none" class="input-item" [class.disabled]="!isEditingProfile">
+            <ion-input id="profile-name" name="name" formControlName="name" autocomplete="name" [readonly]="!isEditingProfile"></ion-input>
+          </ion-item>
+        </div>
+        <div class="form-group">
+          <label for="profile-phone">Phone Number</label>
+          <ion-item lines="none" class="input-item" [class.disabled]="!isEditingProfile">
+            <ion-input id="profile-phone" name="phone" formControlName="phone" autocomplete="tel" [readonly]="!isEditingProfile"></ion-input>
+          </ion-item>
+        </div>
+
+        <ion-button 
+          *ngIf="isEditingProfile"
+          expand="block" 
+          class="save-btn"
+          [disabled]="profileForm.invalid"
+          (click)="saveProfile()"
+        >
+          Save Changes
+        </ion-button>
+      </form>
+    </div>
+
+    <ion-button expand="block" fill="outline" color="danger" class="logout-btn" (click)="logout()">
+      <ion-icon name="log-out-outline" slot="start"></ion-icon>
+      Logout
+    </ion-button>
+  </div>
+
+  <!-- Vehicles Tab -->
+  <div class="tab-content" *ngIf="activeTab === 'vehicles'">
+    <div class="section-header-action">
+      <h3>My Vehicles</h3>
+      <ion-button fill="clear" size="small" (click)="openAddVehicle()">
+        <ion-icon name="add" slot="start"></ion-icon>
+        Add
+      </ion-button>
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading-state" *ngIf="vehiclesLoading">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Loading vehicles...</p>
+    </div>
+
+    <!-- Error State -->
+    <div class="error-state" *ngIf="vehiclesError && !vehiclesLoading">
+      <ion-icon name="alert-circle-outline"></ion-icon>
+      <p>{{ vehiclesError }}</p>
+      <ion-button fill="outline" size="small" (click)="retryLoadVehicles()">
+        <ion-icon name="refresh" slot="start"></ion-icon>
+        Retry
+      </ion-button>
+    </div>
+
+    <div class="vehicles-list" *ngIf="!vehiclesLoading && !vehiclesError">
+      <div class="vehicle-card" *ngFor="let vehicle of vehicles" [class.default]="vehicle.isDefault">
+        <div class="vehicle-info">
+          <div class="vehicle-plate">
+            {{ vehicle.licensePlate }}
+            <span class="default-badge" *ngIf="vehicle.isDefault">Default</span>
+          </div>
+          <div class="vehicle-model">{{ vehicle.brand }} {{ vehicle.model }}</div>
+        </div>
+        <div class="vehicle-actions">
+          <ion-button fill="clear" size="small" *ngIf="!vehicle.isDefault" (click)="setDefaultVehicle(vehicle)">
+            <ion-icon name="star-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" size="small" (click)="editVehicle(vehicle)">
+            <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" size="small" color="danger" (click)="deleteVehicle(vehicle)">
+            <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+        </div>
+      </div>
+
+      <div class="empty-state" *ngIf="vehicles.length === 0">
+        <ion-icon name="car-outline"></ion-icon>
+        <p>No vehicles added yet</p>
+        <ion-button fill="outline" size="small" (click)="openAddVehicle()">
+          Add Vehicle
+        </ion-button>
+      </div>
+    </div>
+  </div>
+
+  <!-- History Tab -->
+  <div class="tab-content" *ngIf="activeTab === 'history'">
+    <h3>Parking History</h3>
+
+    <!-- Loading State -->
+    <div class="loading-state" *ngIf="historyLoading && parkingHistory.length === 0">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Loading history...</p>
+    </div>
+
+    <!-- Error State -->
+    <div class="error-state" *ngIf="historyError && !historyLoading">
+      <ion-icon name="alert-circle-outline"></ion-icon>
+      <p>{{ historyError }}</p>
+      <ion-button fill="outline" size="small" (click)="retryLoadHistory()">
+        <ion-icon name="refresh" slot="start"></ion-icon>
+        Retry
+      </ion-button>
+    </div>
+
+    <div class="history-list" *ngIf="!historyError">
+      <div class="history-card" *ngFor="let session of parkingHistory" [class.unpaid]="session.payment?.status !== 'paid'">
+        <div class="history-date">
+          {{ session.startedAt | date:'MMM d, y' }}
+        </div>
+        <div class="history-content">
+          <div class="history-main">
+            <h4>{{ session.spot.zoneName }} - {{ session.spot.spotNumber }}</h4>
+            <p>{{ session.vehicle.licensePlate }} • {{ session.formattedDuration }}</p>
+          </div>
+          <div class="history-amount">
+            <span class="amount">{{ session.totalAmount || session.currentAmount }} MKD</span>
+            <span class="status" [class.paid]="isSessionPaid(session)" [class.pending]="!isSessionPaid(session)">
+              {{ isSessionPaid(session) ? 'Paid' : 'Pending' }}
+            </span>
+          </div>
+        </div>
+        <!-- Pay Button for unpaid sessions -->
+        <div class="history-actions" *ngIf="!isSessionPaid(session) && session.status === 'completed'">
+          <ion-button size="small" (click)="payForSession(session)">
+            <ion-icon name="card" slot="start"></ion-icon>
+            Pay Now
+          </ion-button>
+        </div>
+      </div>
+
+      <ion-infinite-scroll
+        *ngIf="hasMoreHistory && !historyLoading"
+        (ionInfinite)="loadMoreHistory($event)"
+      >
+        <ion-infinite-scroll-content
+          loadingSpinner="crescent"
+          loadingText="Loading more..."
+        ></ion-infinite-scroll-content>
+      </ion-infinite-scroll>
+
+      <div class="empty-state" *ngIf="parkingHistory.length === 0 && !historyLoading">
+        <ion-icon name="time-outline"></ion-icon>
+        <p>No parking history yet</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add/Edit Vehicle Modal -->
+  <ion-modal
+    *ngIf="showAddVehicle"
+    [isOpen]="true"
+    (didDismiss)="closeAddVehicle()"
+    class="vehicle-modal"
+  >
+    <ng-template ion-modal-content>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{ editingVehicleId ? 'Edit Vehicle' : 'Add Vehicle' }}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="closeAddVehicle()">
+              <ion-icon name="close" slot="icon-only"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <div class="ion-padding">
+        <form [formGroup]="vehicleForm">
+          <div class="form-group">
+            <label>License Plate</label>
+            <ion-item lines="none" class="input-item">
+              <ion-input 
+                formControlName="licensePlate" 
+                placeholder="OH 1234 AB"
+                [style.text-transform]="'uppercase'"
+              ></ion-input>
+            </ion-item>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Brand</label>
+              <ion-item lines="none" class="input-item">
+                <ion-input formControlName="brand" placeholder="Toyota"></ion-input>
+              </ion-item>
+            </div>
+            <div class="form-group">
+              <label>Model</label>
+              <ion-item lines="none" class="input-item">
+                <ion-input formControlName="model" placeholder="Corolla"></ion-input>
+              </ion-item>
+            </div>
+          </div>
+
+          <ion-button 
+            expand="block" 
+            class="save-btn"
+            [disabled]="vehicleForm.invalid"
+            (click)="saveVehicle()"
+          >
+            {{ editingVehicleId ? 'Update Vehicle' : 'Add Vehicle' }}
+          </ion-button>
+        </form>
+      </div>
+    </ng-template>
+  </ion-modal>
+</ion-content>

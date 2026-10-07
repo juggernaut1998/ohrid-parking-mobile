@@ -1,0 +1,80 @@
+<ion-content class="map-content">
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="map-layout">
+    <!-- Map Section - fixed height -->
+    <div class="map-section">
+      <div #mapContainer class="map-container"></div>
+
+      <div class="header-overlay">
+        <div class="connection-status" [class.connected]="connectionStatus === 'connected'" [class.connecting]="connectionStatus === 'connecting'">
+          <div class="status-dot"></div>
+          <span *ngIf="connectionStatus === 'connected'">Live</span>
+          <span *ngIf="connectionStatus === 'connecting'">Connecting...</span>
+          <span *ngIf="connectionStatus === 'disconnected'">Offline</span>
+        </div>
+        <ion-button fill="clear" size="small" (click)="centerOnUser()">
+          <ion-icon name="locate" slot="icon-only"></ion-icon>
+        </ion-button>
+      </div>
+
+      <div class="active-session-banner" *ngIf="activeSession" (click)="goToActiveSession()">
+        <ion-icon name="time"></ion-icon>
+        <span>Parking Active: {{ activeSession.spot.spotNumber }} - {{ activeSession.spot.zoneName }}</span>
+        <ion-icon name="chevron-forward"></ion-icon>
+      </div>
+
+      <div class="error-banner" *ngIf="loadError">
+        <ion-icon name="cloud-offline"></ion-icon>
+        <span>{{ loadError }}</span>
+        <ion-button fill="clear" size="small" (click)="retryLoad()">
+          <ion-icon name="refresh" slot="icon-only"></ion-icon>
+        </ion-button>
+      </div>
+
+      <div class="loading-overlay" *ngIf="isLoading">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p>Loading map...</p>
+      </div>
+    </div>
+
+    <!-- Parking Spots List - below map -->
+    <div class="spots-section">
+      <div class="spots-header">
+        <h2>Parking Spots</h2>
+        <span *ngIf="parkingSpots.length > 0" class="spots-count">{{ parkingSpots.length }} nearby</span>
+      </div>
+
+      <ion-list *ngIf="!isLoading && parkingSpots.length > 0">
+        <ion-item 
+          *ngFor="let spot of parkingSpots" 
+          button 
+          (click)="selectSpot(spot)"
+          [class.spot-available]="spot.status === 'free'"
+          [class.spot-occupied]="spot.status !== 'free'"
+        >
+          <ion-icon 
+            [name]="spot.status === 'free' ? 'checkmark-circle' : 'close-circle'" 
+            slot="start"
+            [color]="spot.status === 'free' ? 'success' : 'medium'"
+          ></ion-icon>
+          <ion-label>
+            <h3>Spot {{ spot.spotNumber }} • {{ spot.zone.name }}</h3>
+            <p>{{ spot.zone.pricePerHour }} MKD/hr</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+
+      <div class="empty-state" *ngIf="!isLoading && !loadError && parkingSpots.length === 0">
+        <ion-icon name="car-outline"></ion-icon>
+        <p>No parking spots in this area</p>
+        <ion-button fill="outline" size="small" (click)="retryLoad()">
+          <ion-icon name="refresh" slot="start"></ion-icon>
+          Refresh
+        </ion-button>
+      </div>
+    </div>
+  </div>
+</ion-content>

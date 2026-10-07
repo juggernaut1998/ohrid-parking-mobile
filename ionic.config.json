@@ -1,0 +1,7 @@
+{
+  "name": "ohrid-parking-app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

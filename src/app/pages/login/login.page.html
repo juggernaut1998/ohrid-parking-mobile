@@ -1,0 +1,29 @@
+<ion-content class="ion-padding">
+  <div class="login-container">
+    <div class="header-section">
+      <ion-icon name="car-sport" size="large" color="primary"></ion-icon>
+      <h1>Ohrid Parking</h1>
+      <p>Find & pay for parking with ease</p>
+    </div>
+
+    <form [formGroup]="emailForm" (ngSubmit)="loginWithEmail()">
+      <ion-item lines="full">
+        <ion-label position="stacked">Email</ion-label>
+        <ion-input
+          type="email"
+          formControlName="email"
+          placeholder="your@email.com"
+        ></ion-input>
+      </ion-item>
+      
+      <ion-button
+        expand="block"
+        type="submit"
+        [disabled]="emailForm.invalid || isLoading"
+        class="ion-margin-top"
+      >
+        Continue with Email
+      </ion-button>
+    </form>
+  </div>
+</ion-content>

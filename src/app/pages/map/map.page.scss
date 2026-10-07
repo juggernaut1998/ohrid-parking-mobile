@@ -1,0 +1,199 @@
+/* Map takes portion of screen, spots list below */
+
+.map-content {
+  --background: var(--ion-background-color);
+}
+
+.map-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 100%;
+}
+
+/* Map section - fixed height, ~55% of viewport */
+.map-section {
+  flex-shrink: 0;
+  height: 55vh;
+  min-height: 260px;
+  position: relative;
+  overflow: hidden;
+  background: var(--ion-background-color);
+}
+
+.map-container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+  background: var(--ion-background-color);
+}
+
+.header-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: env(safe-area-inset-top) 0.5rem 0.5rem;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.connection-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 20px;
+  background: var(--ion-background-color);
+  font-size: 12px;
+  color: var(--ion-color-medium);
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ion-color-medium);
+  }
+
+  &.connected .status-dot {
+    background: var(--ion-color-success);
+  }
+
+  &.connecting .status-dot {
+    background: var(--ion-color-warning);
+  }
+}
+
+.active-session-banner {
+  position: absolute;
+  bottom: 0.5rem;
+  left: 0.5rem;
+  right: 0.5rem;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--ion-color-primary);
+  color: var(--ion-color-primary-contrast);
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+
+  ion-icon:first-child {
+    flex-shrink: 0;
+  }
+
+  span {
+    flex: 1;
+  }
+}
+
+.error-banner {
+  position: absolute;
+  bottom: 0.5rem;
+  left: 0.5rem;
+  right: 0.5rem;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--ion-color-danger-tint);
+  color: var(--ion-color-danger-shade);
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.loading-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  background: var(--ion-background-color);
+
+  ion-spinner {
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    font-size: 14px;
+    color: var(--ion-color-medium);
+  }
+}
+
+/* Spots list - scrollable below map */
+.spots-section {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.spots-header {
+  padding: 1rem 1rem 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+
+  h2 {
+    margin: 0;
+    font-size: 1.1rem;
+  }
+
+  .spots-count {
+    font-size: 13px;
+    color: var(--ion-color-medium);
+  }
+}
+
+ion-list {
+  padding: 0;
+}
+
+ion-item.spot-available,
+ion-item.spot-occupied {
+  --background: var(--ion-item-background);
+}
+
+.drawer-handle {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 36px;
+  height: 4px;
+  background: var(--ion-color-medium);
+  border-radius: 2px;
+  opacity: 0.5;
+  z-index: 10;
+}
+
+.empty-state {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+
+  ion-icon {
+    font-size: 48px;
+    color: var(--ion-color-medium);
+    margin-bottom: 1rem;
+  }
+
+  p {
+    margin: 0 0 1rem 0;
+    color: var(--ion-color-medium);
+  }
+}

@@ -1,0 +1,18 @@
+<ion-tabs>
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button tab="map" href="/tabs/map">
+      <ion-icon name="map"></ion-icon>
+      <ion-label>Map</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="scanner" href="/tabs/scanner">
+      <ion-icon [name]="hasActiveSession ? 'time' : 'qr-code'"></ion-icon>
+      <ion-label>{{ hasActiveSession ? 'Parking' : 'Scan' }}</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="profile" href="/tabs/profile">
+      <ion-icon name="person"></ion-icon>
+      <ion-label>Profile</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>

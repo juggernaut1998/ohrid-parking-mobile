@@ -1,0 +1,65 @@
+/*
+ * Ohrid Parking - Default Ionic light theme only
+ */
+
+/* Ionic core - required */
+@import "@ionic/angular/css/core.css";
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+/*
+ * Force light theme - use class-based dark palette so dark mode only applies
+ * when ion-palette-dark is added. We never add it = always light.
+ */
+@import "@ionic/angular/css/palettes/dark.class.css";
+
+/* Input fields - bordered style */
+ion-item:has(ion-input) {
+  --border-width: 0;
+  --inner-border-width: 0;
+  border: 1px solid var(--ion-color-light-shade);
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+  --min-height: 48px;
+}
+
+/* Spot drawer modal - rendered at app root, no backdrop to avoid black overlay */
+.spot-drawer-modal {
+  --backdrop-opacity: 0;
+  --border-radius: 16px 16px 0 0;
+  --box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.15);
+
+  &::part(content) {
+    border-radius: 16px 16px 0 0;
+  }
+
+  &::part(backdrop) {
+    --backdrop-opacity: 0 !important;
+  }
+}
+
+/* Vehicle add/edit modal - centered vertically and horizontally */
+.vehicle-modal {
+  --width: 100%;
+  --max-width: 500px;
+  --height: auto;
+  --border-radius: 16px;
+  --box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  --backdrop-opacity: 0.4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &::part(content) {
+    position: relative;
+    display: block;
+    contain: content;
+  }
+}
